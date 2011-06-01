@@ -62,7 +62,8 @@ terminate(_Req, _State) ->
 
 websocket_init(_Any, Req, []) ->
 	timer:send_interval(1000, tick),
-	{ok, Req, undefined}.
+	Req2 = cowboy_http_req:compact(Req),
+	{ok, Req2, undefined}.
 
 websocket_handle(tick, Req, State) ->
 	{reply, <<"Tick">>, Req, State};
