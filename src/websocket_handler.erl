@@ -66,9 +66,9 @@ websocket_init(_Any, Req, []) ->
 	{ok, Req2, undefined}.
 
 websocket_handle(tick, Req, State) ->
-	{reply, <<"Tick">>, Req, State};
+	{reply, <<"Tick">>, Req, State, hibernate};
 websocket_handle({websocket, Msg}, Req, State) ->
-	{reply, << "You said: ", Msg/binary >>, Req, State}.
+	{reply, << "You said: ", Msg/binary >>, Req, State, hibernate}.
 
 websocket_terminate(_Reason, _Req, _State) ->
 	ok.
