@@ -4,7 +4,8 @@
 -behaviour(cowboy_http_handler).
 -behaviour(cowboy_http_websocket_handler).
 -export([init/3, handle/2, terminate/2]).
--export([websocket_init/3, websocket_handle/3, websocket_terminate/3]).
+-export([websocket_init/3, websocket_handle/3,
+	websocket_info/3, websocket_terminate/3]).
 
 init({_Any, http}, Req, []) ->
 	case cowboy_http_req:header('Upgrade', Req) of
@@ -65,10 +66,13 @@ websocket_init(_Any, Req, []) ->
 	Req2 = cowboy_http_req:compact(Req),
 	{ok, Req2, undefined}.
 
-websocket_handle(tick, Req, State) ->
-	{reply, <<"Tick">>, Req, State, hibernate};
-websocket_handle({websocket, Msg}, Req, State) ->
+websocket_handle(Msg, Req, State) ->
 	{reply, << "You said: ", Msg/binary >>, Req, State, hibernate}.
+
+websocket_info(tick, Req, State) ->
+	{reply, <<"Tick">>, Req, State, hibernate};
+websocket_info(_Info, Req, State) ->
+	{ok, Req, State, hibernate}.
 
 websocket_terminate(_Reason, _Req, _State) ->
 	ok.
