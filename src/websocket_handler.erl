@@ -66,11 +66,13 @@ websocket_init(_Any, Req, []) ->
 	Req2 = cowboy_http_req:compact(Req),
 	{ok, Req2, undefined}.
 
-websocket_handle(Msg, Req, State) ->
-	{reply, << "You said: ", Msg/binary >>, Req, State, hibernate}.
+websocket_handle({text, Msg}, Req, State) ->
+	{reply, {text, << "You said: ", Msg/binary >>}, Req, State, hibernate};
+websocket_handle(_Any, Req, State) ->
+	{ok, Req, State}.
 
 websocket_info(tick, Req, State) ->
-	{reply, <<"Tick">>, Req, State, hibernate};
+	{reply, {text, <<"Tick">>}, Req, State, hibernate};
 websocket_info(_Info, Req, State) ->
 	{ok, Req, State, hibernate}.
 
