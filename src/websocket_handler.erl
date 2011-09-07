@@ -10,6 +10,7 @@
 init({_Any, http}, Req, []) ->
 	case cowboy_http_req:header('Upgrade', Req) of
 		{undefined, Req2} -> {ok, Req2, undefined};
+		{<<"websocket">>, _Req2} -> {upgrade, protocol, cowboy_http_websocket};
 		{<<"WebSocket">>, _Req2} -> {upgrade, protocol, cowboy_http_websocket}
 	end.
 
@@ -26,6 +27,9 @@ function addStatus(text){
 		+ date + \": \" + text + \"<br/>\";
 }
 function ready(){
+	if (\"MozWebSocket\" in window) {
+		WebSocket = MozWebSocket;
+	}
 	if (\"WebSocket\" in window) {
 		// browser supports websockets
 		var ws = new WebSocket(\"ws://localhost:8080/websocket\");
