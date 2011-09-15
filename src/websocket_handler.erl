@@ -68,7 +68,7 @@ terminate(_Req, _State) ->
 websocket_init(_Any, Req, []) ->
 	timer:send_interval(1000, tick),
 	Req2 = cowboy_http_req:compact(Req),
-	{ok, Req2, undefined}.
+	{ok, Req2, undefined, hibernate}.
 
 websocket_handle({text, Msg}, Req, State) ->
 	{reply, {text, << "You said: ", Msg/binary >>}, Req, State, hibernate};
